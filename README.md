@@ -1,6 +1,6 @@
 # SimpleSwap
 
-Swap crypto on crypto wallet.
+A Dapp that enables you swap SOL to USDT on the Solana blockchain
 
 ## Getting Started
 
