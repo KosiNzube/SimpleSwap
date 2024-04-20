@@ -1,6 +1,6 @@
-# lunotutor
+# SimpleSwap
 
-A new Flutter project.
+Swap crypto on crypto wallet.
 
 ## Getting Started
 
