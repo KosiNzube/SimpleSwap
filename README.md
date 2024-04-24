@@ -1,6 +1,6 @@
-# lunotutor
+# SimpleSwap
 
-A new Flutter project.
+A Dapp that enables you swap SOL to USDT on the Solana blockchain
 
 ## Getting Started
 
