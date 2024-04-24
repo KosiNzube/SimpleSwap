@@ -5,15 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:solana_web3/programs.dart';
 import 'package:solana_web3/solana_web3.dart' as web3;
 import 'package:solana_web3/solana_web3.dart';
 import '../Styles/constants.dart';
 import '../Styles/style.dart';
 import '../helpers/custom_text.dart';
+import '../helpers/helperFunctions.dart';
 import '../main.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 
+const LAMPORTS_PER_SOL = 1000000000;
 
 class Review_Swap_Screen extends StatefulWidget {
   @override
@@ -24,12 +27,13 @@ class _Review_Swap_ScreenState extends State<Review_Swap_Screen> with AutomaticK
   @override
   bool get wantKeepAlive => true;
 
-
-  String SOLADRESS="3pxuvXVHdhWecaGmrP97yW8fSrbpFAnXPLTrTJJM8YoF";
+  final programId = web3.Pubkey.fromBase58("dummy_program_id");
+  late BlockhashWithExpiryBlockHeight blockhash;
+  String SOLADRESS="8Nm6jv1281Wj988SgK1WRBWbVDHJNC8MJEF5K8uwdiZn";
 
   TextEditingController xxx = new TextEditingController();
   TextEditingController wallet = new TextEditingController();
-
+  final connection = Connection(Cluster.devnet);
   String _solAmount = '0.0';
   String _usdtEquivalent = '0.0';
   double balance=50.0;
@@ -38,8 +42,8 @@ class _Review_Swap_ScreenState extends State<Review_Swap_Screen> with AutomaticK
   List<String> percentages=["25%","50%","75%","100%"];
 
   Future<double?> getTestnetBalance() async {
-    final connection = Connection(Cluster.devnet);
 
+    blockhash = await connection.getLatestBlockhash();
 
     final publicKey = web3.Pubkey.fromString(SOLADRESS);
 
@@ -47,7 +51,7 @@ class _Review_Swap_ScreenState extends State<Review_Swap_Screen> with AutomaticK
     // Check the account balances before making the transfer.
     final balance = await connection.getBalance(publicKey);
 
-    return balance.toDouble();
+    return balance.toDouble()/ LAMPORTS_PER_SOL;
   }
 
 
@@ -861,12 +865,16 @@ class _Review_Swap_ScreenState extends State<Review_Swap_Screen> with AutomaticK
                                       padding: EdgeInsets.symmetric(
                                           horizontal: kDefaultPadding/2, vertical: kDefaultPadding/2),
                                       child: InkWell(
-                                        onTap:(){
+                                        onTap:() async {
+
 
                                           String x=_solAmount;
                                           String y=_usdtEquivalent;
 
                                           if(balance>double.parse(_solAmount)) {
+
+
+
                                             Navigator.pop(context2);
 
                                             setState(() {
@@ -884,6 +892,68 @@ class _Review_Swap_ScreenState extends State<Review_Swap_Screen> with AutomaticK
                                               pageTransitionAnimation: PageTransitionAnimation
                                                   .cupertino,
                                             );
+
+
+
+
+
+                                            //THE REAL PROGRAM IS COMMENTED BELOW
+
+
+
+                                            /*
+
+                                            if (double.parse(_solAmount).floor() != double.parse(_solAmount)) {
+                                              throw Exception("SOL amount must be a whole number");
+                                            }
+
+                                            final solAmountAsInt = double.parse(_solAmount).floor(); // Convert to integer (whole SOL units)
+
+
+                                            final solAmountBytes = intToBytesLE(solAmountAsInt);
+
+
+
+                                            final instruction = TransactionInstruction(
+                                              programId: programId,
+                                              data: solAmountBytes, keys: [],
+                                            );
+
+
+
+                                            final transaction = web3.Transaction.v0(
+                                                payer: web3.Pubkey.fromString(SOLADRESS),
+                                                recentBlockhash: blockhash.blockhash,
+                                                instructions: [
+                                                  instruction
+                                                ]
+                                            );
+
+                                            //A dummy private key
+                                            int PRIVATE_KEY=49898938598595454;
+
+                                            final keypair = await Keypair.fromSeckey(Uint8List(PRIVATE_KEY));
+
+
+                                            transaction.sign([keypair]);
+
+                                            // Send the transaction to the cluster and wait for it to be confirmed.
+                                            print('Send and confirm transaction...\n');
+                                            await connection.sendAndConfirmTransaction(
+                                              transaction,
+                                            );
+
+
+
+                                            final temp_balance = await connection.getBalance(web3.Pubkey.fromString(SOLADRESS));
+
+                                            setState((){
+                                              balance=temp_balance.toDouble()/ LAMPORTS_PER_SOL;
+
+                                            });
+
+
+                                             */
 
                                           }else{
                                             snack("The SOL amount you entered exceeds your balance", context);
