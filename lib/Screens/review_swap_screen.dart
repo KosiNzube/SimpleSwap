@@ -11,7 +11,6 @@ import 'package:solana_web3/solana_web3.dart';
 import '../Styles/constants.dart';
 import '../Styles/style.dart';
 import '../helpers/custom_text.dart';
-import '../helpers/helperFunctions.dart';
 import '../main.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -27,7 +26,7 @@ class _Review_Swap_ScreenState extends State<Review_Swap_Screen> with AutomaticK
   @override
   bool get wantKeepAlive => true;
 
-  final programId = web3.Pubkey.fromBase58("dummy_program_id");
+//  final programId = web3.Pubkey.fromBase58("dummy_program_id");
   late BlockhashWithExpiryBlockHeight blockhash;
   String SOLADRESS="8Nm6jv1281Wj988SgK1WRBWbVDHJNC8MJEF5K8uwdiZn";
 
